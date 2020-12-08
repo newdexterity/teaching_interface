@@ -1,2 +1,2 @@
-#define SECRET_SSID "SparkNDX"
-#define SECRET_PASS "auckland2020"
+#define SECRET_SSID "RobotCell"
+#define SECRET_PASS "Auckland2020"
