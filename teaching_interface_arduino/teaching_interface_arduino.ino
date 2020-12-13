@@ -1,6 +1,7 @@
 #include <SPI.h>
 #include <WiFiNINA.h>
 #include <ArduinoJson.h>
+#include <StreamUtils.h>
 #include "arduino_secrets.h" 
 
 // Extract SSID and password from arduino_secrets.h
@@ -26,8 +27,8 @@ const int pot = A0;               // potentiometer
 const int fsr_one = A1;           // FSR right
 const int fsr_two = A2;           // FSR left
 
-char *digital_buttons[]={"X_axis ","Y_axis ","Z_axis ","Roll ","Pitch ","Yaw ","Waypoint ","Gravity ","Reference ","Direction "};
-char *analog_buttons[]={"Potentiometer ","FSR_1 ","FSR_2 "};
+//char *digital_buttons[]={"X_axis ","Y_axis ","Z_axis ","Roll ","Pitch ","Yaw ","Waypoint ","Gravity ","Reference ","Direction "};
+//char *analog_buttons[]={"Potentiometer ","FSR_1 ","FSR_2 "};
 
 
 void setup() {
@@ -35,7 +36,7 @@ void setup() {
   Serial.begin(9600);
 
   // Wait for port to open
-  while (!Serial) continue;
+//  while (!Serial) continue;
 
   // Set pin modes
   pinMode(x_axis, INPUT_PULLUP);
@@ -86,13 +87,13 @@ void loop() {
   if (!client) return;
 
   // Client found
-  Serial.println("New client");
+//  Serial.println("New client");
   
   // Read the request and ignore the content
   while (client.available()) client.read();
 
   // Allocate a temporary JsonDocument (arduinojson.org/v6/assistant for capacity)
-  StaticJsonDocument<500> doc;
+  StaticJsonDocument<256> doc;
 
   // Write digital pin values
   doc["x"] = digitalRead(2);
@@ -103,17 +104,17 @@ void loop() {
   doc["yaw"] = digitalRead(7);
   doc["wp"] = digitalRead(8);
   doc["conf"] = digitalRead(9);
-  doc["reference"] = digitalRead(10);
-  doc["direction"] = digitalRead(11);
+  doc["ref"] = digitalRead(10);
+  doc["dir"] = digitalRead(11);
 
   // Write analog pin values
   doc["dial"] = analogRead(0);
   doc["fsr1"] = analogRead(1);
   doc["fsr2"] = analogRead(2);
   
-  Serial.print(F("Sending: "));
-  serializeJson(doc, Serial);
-  Serial.println();
+//  Serial.print(F("Sending: "));
+//  serializeJson(doc, Serial);
+//  Serial.println();
 
   // Write response headers
   client.println(F("HTTP/1.0 200 OK"));
@@ -124,7 +125,11 @@ void loop() {
   client.println();
 
   // Write JSON document
-  serializeJsonPretty(doc, client);
+//  serializeJsonPretty(doc, client);
+
+  WriteBufferingStream bufferedWifiClient(client, 256);
+  serializeJson(doc, bufferedWifiClient);
+  bufferedWifiClient.flush();
 
   // Disconnect
   client.stop();
