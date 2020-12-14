@@ -27,9 +27,6 @@ const int pot = A0;               // potentiometer
 const int fsr_one = A1;           // FSR right
 const int fsr_two = A2;           // FSR left
 
-//char *digital_buttons[]={"X_axis ","Y_axis ","Z_axis ","Roll ","Pitch ","Yaw ","Waypoint ","Gravity ","Reference ","Direction "};
-//char *analog_buttons[]={"Potentiometer ","FSR_1 ","FSR_2 "};
-
 
 void setup() {
   // Initialise serial port
@@ -104,14 +101,15 @@ void loop() {
   doc["yaw"] = digitalRead(7);
   doc["wp"] = digitalRead(8);
   doc["conf"] = digitalRead(9);
-  doc["ref"] = digitalRead(10);
-  doc["dir"] = digitalRead(11);
+  doc["dir"] = digitalRead(10);
+  doc["ref"] = digitalRead(11);
 
   // Write analog pin values
   doc["dial"] = analogRead(0);
   doc["fsr1"] = analogRead(1);
   doc["fsr2"] = analogRead(2);
-  
+
+  // Debug
 //  Serial.print(F("Sending: "));
 //  serializeJson(doc, Serial);
 //  Serial.println();
@@ -124,9 +122,7 @@ void loop() {
   client.println(measureJsonPretty(doc));
   client.println();
 
-  // Write JSON document
-//  serializeJsonPretty(doc, client);
-
+  // Write JSON document, use buffered stream to speed up
   WriteBufferingStream bufferedWifiClient(client, 256);
   serializeJson(doc, bufferedWifiClient);
   bufferedWifiClient.flush();
