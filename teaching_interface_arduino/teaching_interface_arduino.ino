@@ -93,21 +93,21 @@ void loop() {
   StaticJsonDocument<256> doc;
 
   // Write digital pin values
-  doc["x"] = digitalRead(2);
-  doc["y"] = digitalRead(3);
-  doc["z"] = digitalRead(4);
-  doc["roll"] = digitalRead(5);
-  doc["pitch"] = digitalRead(6);
-  doc["yaw"] = digitalRead(7);
-  doc["wp"] = digitalRead(8);
-  doc["conf"] = digitalRead(9);
-  doc["dir"] = digitalRead(10);
-  doc["ref"] = digitalRead(11);
+  doc["b2"] = digitalRead(2);
+  doc["b4"] = digitalRead(3);
+  doc["b6"] = digitalRead(4);
+  doc["b3"] = digitalRead(5);
+  doc["b5"] = digitalRead(6);
+  doc["b7"] = digitalRead(7);
+  doc["b1"] = digitalRead(8);
+  doc["b0"] = digitalRead(9);
+  doc["s1"] = digitalRead(10);
+  doc["s0"] = digitalRead(11);
 
   // Write analog pin values
   doc["dial"] = analogRead(0);
-  doc["fsr1"] = analogRead(1);
-  doc["fsr2"] = analogRead(2);
+  doc["fsr0"] = analogRead(1);
+  doc["fsr1"] = analogRead(2);
 
   // Debug
 //  Serial.print(F("Sending: "));
